@@ -10,8 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_27_131621) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "time_cards", force: :cascade do |t|
+    t.date "employees_workday", default: -> { "now()" }, null: false
+    t.time "punch_in", default: -> { "now()" }, null: false
+    t.date "leaving_work_day", null: false
+    t.boolean "finished_work", default: false, null: false
+    t.time "leaving_work_time", null: false
+    t.time "punch_out", null: false
+    t.time "break_time", null: false
+    t.time "over_time", null: false
+    t.text "remarks", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
 end
