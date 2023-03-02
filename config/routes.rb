@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :time_cards
-  resources :users
+  resources :users, only: %i[new index]
 end
