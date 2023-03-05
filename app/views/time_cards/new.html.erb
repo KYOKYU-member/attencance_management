@@ -1,0 +1,38 @@
+
+
+      <table class="table" border="1">
+        <thead>
+          <tr>
+            <th></th>
+            <th>曜日</th>
+            <th>日</th>
+            <th>開始<br>終了</th>
+            <th>（休憩）<br>定時内</th>
+            <th>残業</th>
+            <th>深夜</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tr class="sum-row">
+            <td></td>
+            <td></td>
+            <td>合計</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>※合計時間は15分単位の切捨て</td>
+          </tr>
+        <%=(Date.parse("#{@start_date}")..Date.parse("#{@end_date}")).each do |date| %>
+          <tr>
+            <td><a href="">変更</td>
+            <td><%= %w[日 月 火 水 木 金 土][date.wday] %></td>
+            <td><%= date %></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        <%end%>
+      <table>
