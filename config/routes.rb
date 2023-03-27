@@ -12,5 +12,5 @@ Rails.application.routes.draw do
   }
 
   resources :time_cards
-  resources :users, only: %i[new index]
+  resources :users, only: %i[new index create]
 end
