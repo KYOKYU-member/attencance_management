@@ -1,4 +1,5 @@
 class TimeCardsController < ApplicationController
+  before_action :authenticate_user!
   require 'date'
 
   def new

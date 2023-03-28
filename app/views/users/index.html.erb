@@ -14,7 +14,7 @@
       <td><%= user.name_kana %></td>
       <td><%= user.employee_number %></td>
       <td><%= user.is_displayed %></td>
+      <td><%= link_to "詳細", user_path(user.id) %></td>
     </tr>
   <% end %>
 </table>
-<%= link_to "職員新規登録", new_user_path %>

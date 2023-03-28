@@ -21,4 +21,8 @@ class User < ApplicationRecord
   def will_save_change_to_email?
     false
   end
+
+  def active_for_authentication?
+    super && (self.is_displayed == true)
+  end
 end
