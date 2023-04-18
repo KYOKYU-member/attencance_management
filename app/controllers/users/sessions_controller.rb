@@ -23,13 +23,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def reject_user
     @user = User.find_by(employee_number: params[:user][:employee_number])
-    if @user
-      if (@user.valid_password?(params[:user][:password]) && (@user.active_for_authentication? == true))
-        alert[:error] = "ログインできません。"
-      end
-    else
-      alert[:error] = "社員ID・パスワードを入力してください。"
-    end
+    @user.valid_password?(params[:user][:password]) && (@user.active_for_authentication? == true)
   end
 
   # If you have extra params to permit, append them to the sanitizer.

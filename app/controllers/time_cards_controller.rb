@@ -1,5 +1,5 @@
 class TimeCardsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, unless: :current_company
   require 'date'
 
   def new
