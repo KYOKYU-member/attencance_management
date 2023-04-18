@@ -4,4 +4,5 @@ Rails.application.routes.draw do
 
   resources :time_cards
   resources :users, only: %i[new index]
+  resources :shift_types, only: [:new, :create, :index, :edit, :update, :destroy]
 end

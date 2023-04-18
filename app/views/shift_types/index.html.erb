@@ -1,0 +1,10 @@
+<%= link_to "作成", new_shift_type_path %>
+<% @shift_types.each do |shift_type| %>
+<div>
+  <p>出勤時間：<%= shift_type.start_time.strftime('%H:%M') %></p>
+  <p>退勤時間：<%= shift_type.end_time.strftime('%H:%M') %></p>
+  <p>休憩時間：<%= shift_type.break_time %></p>
+  <%= link_to "編集", edit_shift_type_path(shift_type) %>
+  <%= button_to "削除", shift_type_path(shift_type), :method => :delete %>
+</div>
+<% end %>
