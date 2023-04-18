@@ -12,9 +12,5 @@ Rails.application.routes.draw do
   }
 
   resources :time_cards
-  resources :users, only: %i[index show] do
-    member do
-      get :hidden
-    end
-  end
+  resources :users, only: %i[index show edit update]
 end

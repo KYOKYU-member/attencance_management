@@ -1,0 +1,38 @@
+<h2><%= @user.name %>さんの編集</h2>
+
+<%= form_with(model:@user, local: true) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "つのエラー") %> があるので<%= @user.name %> 情報の更新ができません</h2>
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :name_kana %>
+    <%= f.text_field :name_kana %>
+  </div>
+
+  <div class="field">
+    <%= f.label :employee_number %>
+    <%= f.text_field :employee_number %>
+  </div>
+
+  <div class="field">
+    <%= f.label :is_displayed %>
+    <%= f.select :is_displayed, [["表示", true], ["非表示", false]]%>
+  </div>
+
+  <div class="field">
+    <%= f.submit "更新" %>
+  </div>
+<% end %>
