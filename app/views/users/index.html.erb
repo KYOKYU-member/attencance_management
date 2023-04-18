@@ -1,0 +1,21 @@
+<h1>登録職員一覧</h1>
+
+<table>
+  <tr>
+    <th>名前</th>
+    <th>ふりがな</th>
+    <th>社員番号</th>
+    <th>表示/非表示</th>
+  </tr>
+  
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.name_kana %></td>
+      <td><%= user.employee_number %></td>
+      <td><%= user.is_displayed %></td>
+      <td><%= link_to "詳細", user_path(user.id) %></td>
+      <td><%= link_to "編集", edit_user_path(user.id) %></td>
+    </tr>
+  <% end %>
+</table>

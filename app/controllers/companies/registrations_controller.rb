@@ -1,26 +1,18 @@
 # frozen_string_literal: true
 
-class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :configure_sign_up_params, only: %i[create]
-  before_action :authenticate_user!
-  before_action :require_company_login, only: %i[new create]
+class Companies::RegistrationsController < Devise::RegistrationsController
+  # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  def new
-    super
-  end
+  # def new
+  #   super
+  # end
 
   # POST /resource
-  def create
-    company_id = current_company.id
-    build_resource(sign_up_params.merge({company_id: company_id}))
-    if resource.save
-      redirect_to root_path, notice: "職員を登録しました。"
-    else
-      render :new
-    end
-  end
+  # def create
+  #   super
+  # end
 
   # GET /resource/edit
   # def edit
@@ -46,18 +38,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  protected
+  # protected
 
   # If you have extra params to permit, append them to the sanitizer.
-  def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :name_kana, :employee_number, :company_id, :is_displayed])
-  end
-
-  def require_company_login
-    unless current_company.is_a?(Company)
-      redirect_to root_path
-    end
-  end
+  # def configure_sign_up_params
+  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
+  # end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_account_update_params
