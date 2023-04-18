@@ -1,0 +1,9 @@
+<%= form_with model:shift_type, local:true do |f| %>
+  <h4>出勤時間</h4>
+  <%= f.time_field :start_time %>
+  <h4>退勤時間</h4>
+  <%= f.time_field :end_time %>
+  <h4>休憩時間</h4>
+  <%= f.number_field :break_time %>
+  <%= f.submit '作成' %>
+<% end %>
