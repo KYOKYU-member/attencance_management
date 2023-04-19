@@ -20,6 +20,8 @@ gem "devise"
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem "pry-rails"
+  gem "faker"
+  gem "faker-japanese"
 end
 
 group :development do
