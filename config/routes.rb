@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  root 'time_cards#new'
+  # root 'time_cards#new'
+  root 'time_cards#index'
+  
   devise_for :companies, controllers: {
     sessions: 'companies/sessions',
     passwords: 'companies/passwords',

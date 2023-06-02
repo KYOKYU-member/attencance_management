@@ -7,6 +7,7 @@ class User < ApplicationRecord
   validates :name_kana, presence: true
   validates :employee_number, presence: true, uniqueness: true
 
+  has_many :time_cards
   belongs_to :company
 
   #登録時にemailを不要とする

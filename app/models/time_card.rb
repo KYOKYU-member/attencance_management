@@ -5,4 +5,6 @@ class TimeCard < ApplicationRecord
   validates :working_time, presence: true
   validates :break_time, presence: true
   validates :over_time, presence: true
+
+  belongs_to :user
 end
