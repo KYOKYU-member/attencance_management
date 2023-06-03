@@ -35,12 +35,16 @@ class TimeCardsController < ApplicationController
     end
 
     day = Date.today
-    start_date = Date::new(day.year,day.month, 1)
-    end_date = (start_date >> 1) - 1
-    (start_date..end_date).each do |date|
-      @date = date
-      @start_date = start_date
-      @end_date = end_date
+    @start_date = day.beginning_of_month
+    @end_date = day.end_of_month
+    @work_records = {}
+
+    (@start_date..@end_date).each do |day|
+      if @user.time_cards.find_by(work_day: day).present?
+        @work_records.store(day, @user.time_cards.find_by(work_day: day))
+      else
+        @work_records.store(day, nil)
+      end
     end
   end
 
@@ -58,7 +62,12 @@ class TimeCardsController < ApplicationController
 
   def update
     @time_card = TimeCard.find(params[:id])
-    if @time_card.update(end_time: Time.current)
+    work_minutes = (Time.current - @time_card.start_time).floor / 60
+    if @time_card.update(
+      end_time: Time.current,
+      working_time: work_minutes - 60,
+      over_time: 580 - work_minutes > 0 ? 580 - work_minutes : 0
+    )
       redirect_to root_path, notice: "退勤時間を打刻しました"
     else
       render :index

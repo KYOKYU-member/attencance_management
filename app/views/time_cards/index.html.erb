@@ -34,26 +34,34 @@
     </tr>
   </thead>
   <tr class="sum-row">
-      <td></td>
-      <td></td>
-      <td>合計</td>
-      <td>09:00</td>
-      <td>18:00</td>
-      <td>01:00</td>
-      <td></td>
-      <td></td>
-      <td>※合計時間は15分単位の切捨て</td>
-    </tr>
-  <%=(Date.parse("#{@start_date}")..Date.parse("#{@end_date}")).each do |date| %>
+    <td></td>
+    <td></td>
+    <td>合計</td>
+    <td>09:00</td>
+    <td>18:00</td>
+    <td>60分</td>
+    <td></td>
+    <td></td>
+    <td>※合計時間は15分単位の切捨て</td>
+  </tr>
+
+  <% @work_records.each do |date, work_record| %>
     <tr>
       <td><a href="">変更</td>
       <td><%= %w[日 月 火 水 木 金 土][date.wday] %></td>
       <td><%= date %></td>
-      <td></td>
-      <td></td>
+      <td>
+        <%= work_record.start_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td>
+        <%= work_record.end_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day && work_record.end_time != nil %>
+      </td>
+      <td>
+        <%= "#{work_record.break_time}分" if work_record.present? && date == work_record.work_day %>
+      </td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
-  <%end%>
+  <% end %>
 <table>
