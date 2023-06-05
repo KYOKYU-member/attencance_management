@@ -1,44 +1,24 @@
 class TimeCardsController < ApplicationController
   before_action :authenticate_user!, unless: :current_company
-  before_action :set_user, only: %i[new create index]
+  before_action :set_user, only: %i[new starting_work index create]
+  before_action :set_time_card, only: %i[leaving_work edit update destroy]
   require 'date'
 
-  # def new
-  #   @start_display = true
-  #   # if @user.time_cards.where(work_day: Date.today).present?
-  #   #   @start_display = false
-  #   # end
-  #   # @time_card = TimeCard.new
-
-  #   if @user.time_cards.where(work_day: Date.today).present?
-  #     @start_display = false
-  #     @time_card = @user.time_cards.where(work_day: Date.today)
-  #   else
-  #     @time_card = TimeCard.new
-  #   end
-
-  #   day = Date.today
-  #   start_date = Date::new(day.year,day.month, 1)
-  #   end_date = (start_date >> 1) - 1
-  #   (start_date..end_date).each do |date|
-  #     @date = date
-  #     @start_date = start_date
-  #     @end_date = end_date
-  #   end
-  # end
-
   def index
+    # ログインユーザーの当日のタイムカード情報取得無かったら新規作成
     if @user.time_cards.find_by(work_day: Date.today).present?
       @time_card = @user.time_cards.find_by(work_day: Date.today)
     else
       @time_card = TimeCard.new
     end
 
+    # 当月のカレンダー作成
     day = Date.today
     @start_date = day.beginning_of_month
     @end_date = day.end_of_month
-    @work_records = {}
 
+    # 当月の勤務実績取得
+    @work_records = {}
     (@start_date..@end_date).each do |day|
       if @user.time_cards.find_by(work_day: day).present?
         @work_records.store(day, @user.time_cards.find_by(work_day: day))
@@ -48,7 +28,35 @@ class TimeCardsController < ApplicationController
     end
   end
 
+  def new
+    @time_card = TimeCard.new
+  end
+
   def create
+    # newで入力された文字列をTimezoneに変換
+    work_day = Time.zone.parse(params[:time_card][:work_day])
+    start_time = Time.zone.parse(params[:time_card][:work_day] + " " + params[:time_card][:start_time])
+    end_time = Time.zone.parse(params[:time_card][:work_day] + " " + params[:time_card][:end_time])
+    work_minutes = start_time.present? ? (end_time - start_time).floor / 60 : 0
+
+    # start_timeとend_timeからその他時間を計算して保存
+    @time_card = @user.time_cards.build
+    @time_card.work_day = work_day
+    @time_card.start_time = start_time
+    @time_card.end_time = end_time
+    @time_card.break_time = 60
+    @time_card.working_time = work_minutes - @time_card.break_time > 0 ? work_minutes - @time_card.break_time : 0
+    @time_card.over_time = work_minutes - 540 > 0 ? work_minutes - 540 : 0
+    @time_card.remarks = params[:time_card][:remarks]
+    if @time_card.save
+      redirect_to root_path, notice: "タイムカードを作成しました"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def starting_work 
+    #出勤ボタンを押した場合の処理
     @time_card = @user.time_cards.build
     @time_card.work_day = Date.today
     @time_card.start_time = Time.current
@@ -60,19 +68,42 @@ class TimeCardsController < ApplicationController
     end
   end
 
-  def update
-    @time_card = TimeCard.find(params[:id])
+  def leaving_work
+    # 退勤ボタンを押した場合の処理
     work_minutes = (Time.current - @time_card.start_time).floor / 60
     if @time_card.update(
       end_time: Time.current,
-      working_time: work_minutes - 60,
-      over_time: 580 - work_minutes > 0 ? 580 - work_minutes : 0
+      working_time: work_minutes - @time_card.break_time > 0 ? work_minutes - @time_card.break_time : 0,
+      over_time: work_minutes - 540 > 0 ? work_minutes - 540 : 0
     )
       redirect_to root_path, notice: "退勤時間を打刻しました"
     else
       render :index
     end
+  end
 
+  def edit
+  end
+
+  def update
+    start_time = Time.zone.parse(params[:time_card][:work_day] + " " + params[:time_card][:start_time])
+    end_time = Time.zone.parse(params[:time_card][:work_day] + " " + params[:time_card][:end_time])
+    work_minutes = start_time.present? ? (end_time - start_time).floor / 60 : 0
+    if @time_card.update(
+      end_time: end_time,
+      working_time: work_minutes - @time_card.break_time > 0 ? work_minutes - @time_card.break_time : 0,
+      over_time: work_minutes - 540 > 0 ? work_minutes - 540 : 0,
+      remarks: params[:time_card][:remarks]
+    )
+      redirect_to root_path, notice: "タイムカードを更新しました"
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @time_card.destroy
+    redirect_to root_path, notice: "出勤記録を削除しました"
   end
 
   private
@@ -83,5 +114,9 @@ class TimeCardsController < ApplicationController
 
   def set_user
     @user = User.find(current_user.id)
+  end
+
+  def set_time_card
+    @time_card = TimeCard.find(params[:id])
   end
 end

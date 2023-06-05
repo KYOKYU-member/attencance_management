@@ -3,21 +3,22 @@
 
 
 <% if @time_card.start_time.nil? %>
-  <%= form_with(model: @time_card, local: true) do |f| %>
+  <%= form_with(model: @time_card, url: starting_work_time_cards_path, local: true) do |f| %>
     <div class="field">
       <%= f.submit "出勤" %>
     </div>
   <% end %>
 <% else %>
   <% if @time_card.end_time.nil? %>
-    <%= form_with(model: @time_card, local:true )do |f| %>
+    <%= form_with(model: @time_card, url: leaving_work_time_card_path(@time_card.id), local:true )do |f| %>
       <div class="field">
         <%= f.submit "退勤" %>
       </div>
     <% end %>
   <% end %>
 <% end %>
-
+<br>
+<%= button_to "新規タイムカード作成", new_time_card_path, method: :get %>
 
 <table class="table" border="1">
   <thead>
@@ -47,9 +48,9 @@
 
   <% @work_records.each do |date, work_record| %>
     <tr>
-      <td><a href="">変更</td>
+      <td><%= link_to "変更", edit_time_card_path(work_record.id) if work_record.present? && date == work_record.work_day %></td>
       <td><%= %w[日 月 火 水 木 金 土][date.wday] %></td>
-      <td><%= date %></td>
+      <td><%= date.strftime("%m/%d") %></td>
       <td>
         <%= work_record.start_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day %>
       </td>
@@ -59,9 +60,13 @@
       <td>
         <%= "#{work_record.break_time}分" if work_record.present? && date == work_record.work_day %>
       </td>
+      <td>
+        <%= "#{work_record.over_time}分" if work_record.present? && date == work_record.work_day %>
+      </td>
       <td></td>
-      <td></td>
-      <td></td>
+      <td>
+        <%= work_record.remarks if work_record.present? && date == work_record.work_day %>
+      </td>
     </tr>
   <% end %>
 <table>
