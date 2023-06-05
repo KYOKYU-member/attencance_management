@@ -13,9 +13,13 @@ class TimeCardsController < ApplicationController
     end
 
     # 当月のカレンダー作成
-    day = Date.today
-    @start_date = day.beginning_of_month
-    @end_date = day.end_of_month
+    if params[:date].present?
+      @display_month = params[:date].to_date
+    else
+      @display_month = Date.today
+    end
+    @start_date = @display_month.beginning_of_month
+    @end_date = @display_month.end_of_month
 
     # 当月の勤務実績取得
     @work_records = {}
@@ -90,6 +94,7 @@ class TimeCardsController < ApplicationController
     end_time = Time.zone.parse(params[:time_card][:work_day] + " " + params[:time_card][:end_time])
     work_minutes = start_time.present? ? (end_time - start_time).floor / 60 : 0
     if @time_card.update(
+      start_time: start_time,
       end_time: end_time,
       working_time: work_minutes - @time_card.break_time > 0 ? work_minutes - @time_card.break_time : 0,
       over_time: work_minutes - 540 > 0 ? work_minutes - 540 : 0,
