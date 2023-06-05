@@ -1,0 +1,72 @@
+
+<h4><%= @user.name %>さんのタイムカード</h4><br>
+
+
+<% if @time_card.start_time.nil? %>
+  <%= form_with(model: @time_card, url: starting_work_time_cards_path, local: true) do |f| %>
+    <div class="field">
+      <%= f.submit "出勤" %>
+    </div>
+  <% end %>
+<% else %>
+  <% if @time_card.end_time.nil? %>
+    <%= form_with(model: @time_card, url: leaving_work_time_card_path(@time_card.id), local:true )do |f| %>
+      <div class="field">
+        <%= f.submit "退勤" %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+<br>
+<%= button_to "新規タイムカード作成", new_time_card_path, method: :get %>
+
+<table class="table" border="1">
+  <thead>
+    <tr>
+      <th></th>
+      <th>曜日</th>
+      <th>日</th>
+      <th>開始</th>
+      <th>終了</th>
+      <th>（休憩）<br>定時内</th>
+      <th>残業</th>
+      <th>深夜</th>
+      <th>備考</th>
+    </tr>
+  </thead>
+  <tr class="sum-row">
+    <td></td>
+    <td></td>
+    <td>合計</td>
+    <td>09:00</td>
+    <td>18:00</td>
+    <td>60分</td>
+    <td></td>
+    <td></td>
+    <td>※合計時間は15分単位の切捨て</td>
+  </tr>
+
+  <% @work_records.each do |date, work_record| %>
+    <tr>
+      <td><%= link_to "変更", edit_time_card_path(work_record.id) if work_record.present? && date == work_record.work_day %></td>
+      <td><%= %w[日 月 火 水 木 金 土][date.wday] %></td>
+      <td><%= date.strftime("%m/%d") %></td>
+      <td>
+        <%= work_record.start_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td>
+        <%= work_record.end_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day && work_record.end_time != nil %>
+      </td>
+      <td>
+        <%= "#{work_record.break_time}分" if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td>
+        <%= "#{work_record.over_time}分" if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td></td>
+      <td>
+        <%= work_record.remarks if work_record.present? && date == work_record.work_day %>
+      </td>
+    </tr>
+  <% end %>
+<table>

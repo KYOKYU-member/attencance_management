@@ -1,4 +1,4 @@
-<h4>タイムカード新規作成</h4><br>
+<h4>タイムカード編集</h4><br>
 
 <%= form_with(model: @time_card, local: true ) do |f| %>
   <% if @time_card.errors.any? %>
@@ -34,6 +34,10 @@
   </div>
 
   <div class="field">
-    <%= f.submit "登録" %>
+    <%= f.submit "更新" %>
   </div>
 <% end %>
+<br>
+  <div class="field">
+    <%= button_to "削除", time_card_path(@time_card.id), method: :delete, data: { confirm: "本当に削除してもいいですか？" } %>
+  </div>
