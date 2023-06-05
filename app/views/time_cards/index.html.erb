@@ -19,6 +19,12 @@
 <% end %>
 <br>
 <%= button_to "新規タイムカード作成", new_time_card_path, method: :get %>
+<br>
+<h4><%= @display_month.strftime("%Y年%m月") %></h4>
+
+<%= link_to "前月", root_path(date: @display_month.prev_month) %>
+<%= link_to "今月", root_path %>
+<%= link_to "次月", root_path(date: @display_month.next_month) %>
 
 <table class="table" border="1">
   <thead>
