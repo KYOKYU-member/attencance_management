@@ -1,5 +1,13 @@
 require 'faker/japanese'
 
+Company.create!(
+  name: "KYOKYU",
+  email: "test@test.com",
+  address: "東京都渋谷区渋谷#{rand(100..500)}-#{rand(1..100)}-#{rand(1..50)}",
+  phone_number: 1011110000 + rand(1000..9999),
+  password: "111111"
+)
+
 5.times do
   Company.create!(
     name: Faker::Name.name + "会社",
