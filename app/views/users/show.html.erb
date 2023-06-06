@@ -1,6 +1,68 @@
-<h2><%= @user.name %>の詳細<h2>
+<h4><%= @user.name %>の詳細<h4>
 
 
 <p>名前：<%= @user.name %></p>
 <p>カナ：<%= @user.name_kana %></p>
 <p>社員番号：<%= @user.employee_number %></p>
+
+
+<h4><%= @user.name %>さんのタイムカード</h4><br>
+
+<%= button_to "新規タイムカード作成", new_time_card_path, { method: :get, params: { user_id: @user.id }} %>
+<br>
+<h4><%= @display_month.strftime("%Y年%m月") %></h4>
+
+<%= link_to "前月", user_path(date: @display_month.prev_month) %>
+<%= link_to "今月", user_path %>
+<%= link_to "次月", user_path(date: @display_month.next_month) %>
+
+<table class="table" border="1">
+  <thead>
+    <tr>
+      <th></th>
+      <th>曜日</th>
+      <th>日</th>
+      <th>開始</th>
+      <th>終了</th>
+      <th>（休憩）<br>定時内</th>
+      <th>残業</th>
+      <th>深夜</th>
+      <th>備考</th>
+    </tr>
+  </thead>
+  <tr class="sum-row">
+    <td></td>
+    <td></td>
+    <td>合計</td>
+    <td>09:00</td>
+    <td>18:00</td>
+    <td>60分</td>
+    <td></td>
+    <td></td>
+    <td>※合計時間は15分単位の切捨て</td>
+  </tr>
+
+  <% @work_records.each do |date, work_record| %>
+    <tr>
+      <td><%= link_to "変更", edit_time_card_path(id: work_record.id, user_id: @user.id) if work_record.present? && date == work_record.work_day %></td>
+      <td><%= %w[日 月 火 水 木 金 土][date.wday] %></td>
+      <td><%= date.strftime("%m/%d") %></td>
+      <td>
+        <%= work_record.start_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td>
+        <%= work_record.end_time.strftime("%H:%M") if work_record.present? && date == work_record.work_day && work_record.end_time != nil %>
+      </td>
+      <td>
+        <%= "#{work_record.break_time}分" if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td>
+        <%= "#{work_record.over_time}分" if work_record.present? && date == work_record.work_day %>
+      </td>
+      <td></td>
+      <td>
+        <%= work_record.remarks if work_record.present? && date == work_record.work_day %>
+      </td>
+    </tr>
+  <% end %>
+<table>

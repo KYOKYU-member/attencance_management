@@ -16,7 +16,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     company_id = current_company.id
     build_resource(sign_up_params.merge({company_id: company_id}))
     if resource.save
-      redirect_to root_path, notice: "職員を登録しました。"
+      redirect_to users_path, notice: "職員を登録しました。"
     else
       render :new
     end

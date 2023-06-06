@@ -1,6 +1,7 @@
 class TimeCardsController < ApplicationController
   before_action :authenticate_user!, unless: :current_company
-  before_action :set_user, only: %i[new starting_work index create]
+  before_action :set_user, only: %i[new starting_work index edit destroy]
+  before_action :set_time_card_user, only: %i[create update]
   before_action :set_time_card, only: %i[leaving_work edit update destroy]
   require 'date'
 
@@ -53,7 +54,8 @@ class TimeCardsController < ApplicationController
     @time_card.over_time = work_minutes - 540 > 0 ? work_minutes - 540 : 0
     @time_card.remarks = params[:time_card][:remarks]
     if @time_card.save
-      redirect_to root_path, notice: "タイムカードを作成しました"
+      redirect_to root_path, notice: "タイムカードを作成しました" if user_signed_in?
+      redirect_to user_path(@user), notice: "タイムカードを作成しました" if company_signed_in?
     else
       render :new, status: :unprocessable_entity
     end
@@ -100,7 +102,8 @@ class TimeCardsController < ApplicationController
       over_time: work_minutes - 540 > 0 ? work_minutes - 540 : 0,
       remarks: params[:time_card][:remarks]
     )
-      redirect_to root_path, notice: "タイムカードを更新しました"
+      redirect_to root_path, notice: "タイムカードを更新しました" if user_signed_in?
+      redirect_to user_path(@user), notice: "タイムカードを更新しました" if company_signed_in?
     else
       render :edit
     end
@@ -108,7 +111,8 @@ class TimeCardsController < ApplicationController
 
   def destroy
     @time_card.destroy
-    redirect_to root_path, notice: "出勤記録を削除しました"
+    redirect_to root_path, notice: "出勤記録を削除しました" if user_signed_in?
+    redirect_to user_path(@user), notice: "出勤記録を削除しました" if company_signed_in?
   end
 
   private
@@ -118,7 +122,21 @@ class TimeCardsController < ApplicationController
   end
 
   def set_user
-    @user = User.find(current_user.id)
+    if params[:user_id].present?
+      @user = User.find(params[:user_id])
+    # elsif params[:time_card][:user_id].present?
+    #   @user = User.find(params[:time_card][:user_id])
+    else
+      @user = User.find(current_user.id)
+    end
+  end
+
+  def set_time_card_user
+    if params[:time_card][:user_id].present?
+      @user = User.find(params[:time_card][:user_id])
+    else
+      @user = User.find(current_user.id)
+    end
   end
 
   def set_time_card
