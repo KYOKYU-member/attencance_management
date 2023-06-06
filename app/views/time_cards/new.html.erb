@@ -33,6 +33,8 @@
     <%= f.text_area :remarks %>
   </div>
 
+  <%= f.hidden_field :user_id, value: @user.id %>
+
   <div class="field">
     <%= f.submit "登録" %>
   </div>

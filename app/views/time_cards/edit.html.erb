@@ -33,11 +33,13 @@
     <%= f.text_area :remarks %>
   </div>
 
+  <%= f.hidden_field :user_id, value: @user.id %>
+
   <div class="field">
     <%= f.submit "更新" %>
   </div>
 <% end %>
 <br>
   <div class="field">
-    <%= button_to "削除", time_card_path(@time_card.id), method: :delete, data: { confirm: "本当に削除してもいいですか？" } %>
+    <%= button_to "削除", time_card_path(id: @time_card.id, user_id: @user.id), { method: :delete, confirm: "本当に削除してもいいですか？" } %>
   </div>
