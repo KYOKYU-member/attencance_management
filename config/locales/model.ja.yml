@@ -1,0 +1,34 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+      company: 会社
+      time_card: タイムカード
+      shift_type: シフトタイプ
+    attributes:
+      user:
+        name: 名前
+        name_kana: フリガナ
+        employee_number: 社員番号
+        is_displayed: 表示/非表示
+        password: パスワード
+        encrypted_password: 現在のパスワード
+      time_card: 
+        work_day: 勤務日
+        start_time: 出勤時間
+        end_time: 退勤時間
+        working_time: 勤務時間
+        break_time: 休憩時間
+        over_time: 残業時間
+        remarks: 備考
+      company: 
+        name: 会社名
+        address: 住所
+        phone_number: 電話番号
+        email: メールアドレス
+        encrypted_password: 現在のパスワード
+      shift_type: 
+        name: シフト名
+        start_time: 出勤時間
+        end_time: 退勤時間
+        break_time: 休憩時間

@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :time_cards
   belongs_to :company
 
+  enum is_displayed: { "表示": true, "非表示": false }
+
   #登録時にemailを不要とする
   def email_required?
     false
