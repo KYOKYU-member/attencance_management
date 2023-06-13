@@ -13,7 +13,10 @@
       <td><%= user.name %></td>
       <td><%= user.name_kana %></td>
       <td><%= user.employee_number %></td>
-      <td><%= user.is_displayed %></td>
+      <td>
+        <% if user.is_displayed == true %>表示<% end %>
+        <% if user.is_displayed == false %>非表示<% end %>
+      </td>
       <td><%= link_to "詳細", user_path(user.id) %></td>
       <td><%= link_to "編集", edit_user_path(user.id) %></td>
     </tr>
