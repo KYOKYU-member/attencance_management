@@ -19,7 +19,7 @@ Company.create!(
 end
 
 prefix = "K"
-20.times do |i|
+100.times do |i|
   employee_number = "#{prefix}#{(1 + i).to_s.rjust(4, '0')}"
   name = Faker::Japanese::Name.name
   User.create!(
@@ -27,7 +27,7 @@ prefix = "K"
     name_kana: name.yomi,
     employee_number: employee_number,
     password: "111111",
-    company_id: rand(1..5)
+    company_id: rand(1..6)
   )
 end
 
